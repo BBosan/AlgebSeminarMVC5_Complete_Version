@@ -1,0 +1,165 @@
+﻿@model SearchModel
+
+@using Se.Models;
+
+@{
+    ViewBag.Title = "Predbiljezbe List";
+}
+
+<h2>Predbiljezbe</h2>
+
+<div class="container-fluid">
+
+<!--ALERTS-->
+    <div id="za_brisat_submit">
+        <button type="button" id="za_brisat_submit_button" title="DELETE!" class="btn btn-sm btn-link">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+
+    <div id="clear_alert">
+        <a class="close">@*&times;*@<span class="glyphicon glyphicon-remove"></span></a>
+        <strong>Cleared All!</strong>
+    </div>
+
+
+    <!-- Modal START -->
+    <div class="modal fade" id="mojModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                @*<div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                </div>*@
+                <div class="modal-body">
+                    <p id="modalResult"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeModalBTN" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Modal END -->
+<!--ALERTS-->
+
+<div id="upper_menu" class="row">
+    <div class="col-md-12">
+        <div class="btn-group btn-group-sm">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success btn-sm" }) <!-- pull-right -->
+            <button type="button" id="clear" class="btn btn-warning btn-sm" title="Clear!">
+                Clear
+            </button>
+        </div>
+        <ul id="searchResult"></ul>
+        <span class="label label-info" id='page_number_display'></span>
+    </div>
+</div>
+
+
+@using (Ajax.BeginForm(null, null, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "Ajax"
+}, new { @id = "myform" }))
+{
+    <div class="row">
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Naziv, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Naziv, new { htmlAttributes = new { @placeholder = "Naziv Seminara", @class = "form-control", @autocomplete = "off" } })
+            @Html.ValidationMessageFor(model => model.Naziv, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Ime, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Ime, new { htmlAttributes = new { @placeholder = "Ime", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Ime, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Prezime, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Prezime, new { htmlAttributes = new { @placeholder = "Prezime", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Prezime, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(x => x.Status, Model.DP_Predbiljezbe_Status, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        </div>
+    </div>
+}
+
+    <div id="Ajax">
+        @{Html.RenderPartial("_IndexPartial", ViewBag.OnePageOfPredbiljezbas as IEnumerable<PredVM>);}
+    </div>
+</div>
+
+
+@section styles{
+    @*@Styles.Render("~/Content/CSS/Admin/Predb")*@
+    <link href="~/Content/CSS/Admin/Predb/Index.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/Suggestion.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/ClearAlert.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/TableIndex.css" rel="stylesheet" />
+    <style>
+        .modal-backdrop {
+            background-color:#ff4d4d;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .modal-backdrop.in {
+            opacity: 0.9;
+        }
+
+        #closeModalBTN{
+            width:100%;
+        }
+    </style>
+}
+
+@section scripts{
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <script src="~/scripts/Admin/Suggestion.js"></script>
+    <script src="~/scripts/Admin/showAlert.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".close").on("click", function () {
+                $('#clear_alert').slideUp("fast");
+            });
+
+            suggestion(); 
+
+            //Clear
+            $("#clear").on("click", function () {
+                $("#Naziv, #Ime, #Prezime, #Status").val("");
+                $("#searchResult").empty();
+                $("#myform").submit();
+                $("#page_number_display").empty();
+                showAlert('#clear_alert');
+            });
+
+            $("#Naziv").on("input", function () {
+                $("#page_number_display").empty();
+            });
+
+            $("#Naziv, #Ime, #Prezime").on("input", function () {
+                $("#myform").submit();
+            });
+
+            $("#Status").on("change", function () {
+                $("#myform").submit();
+            });
+
+            //$("#closeModalBTN").on("click", function () {
+            //    $("#modalResult").empty();
+            //});
+
+        });
+    </script>
+}
+

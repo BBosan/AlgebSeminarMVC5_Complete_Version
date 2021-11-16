@@ -1,0 +1,122 @@
+﻿@model SearchModel
+
+@using Se.Models;
+
+@{
+    ViewBag.Title = "Seminari List";
+}
+
+<h2>Seminari</h2>
+
+<div class="container-fluid">
+
+<div id="upper_menu" class="row">
+    <div class="col-md-12">
+        <div class="btn-group btn-group-sm">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success btn-sm" }) <!-- pull-right -->
+            <button type="button" id="clear" class="btn btn-warning btn-sm" title="Clear!">
+                Clear
+            </button>
+        </div>
+        <ul id="searchResult"></ul>
+        <span class="label label-info" id='page_number_display'></span>
+    </div>
+</div>
+
+@using (Ajax.BeginForm(null, null, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "Ajax"
+}, new { @id = "myform"}))
+{
+<div class="row">
+        <div class="col-md-3 col-sm-6 ">
+            @*<datalist id="Naziv_List"></datalist>*@
+
+            @Html.LabelFor(model => model.Naziv, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Naziv, new { htmlAttributes = new { @placeholder = "Naziv Seminara", @class = "form-control", @*@list="Naziv_List",*@ @autocomplete = "off" } })
+            @*<ul id="searchResult2"></ul>*@
+            @Html.ValidationMessageFor(model => model.Naziv, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Opis, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Opis, new { htmlAttributes = new { @placeholder = "Opis Seminara", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Opis, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Broj, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Broj, new { htmlAttributes = new { @placeholder = "npr: >=14", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Broj, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-3 col-sm-6 ">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(x => x.Status, Model.DP_Seminari_Status, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        </div>
+</div>
+}
+
+<div id="Ajax">
+    @{Html.RenderPartial("_IndexPartial", ViewBag.OnePageOfSeminars as IEnumerable<SemVM>);}
+</div>
+</div>
+
+<!--ALERTS-->
+<div id="clear_alert">
+    <a class="close">@*&times;*@<span class="glyphicon glyphicon-remove"></span></a>
+    <strong>Cleared All!</strong>
+</div>
+<!--ALERTS-->
+
+
+@section styles{
+    @*@Styles.Render("~/Content/CSS/Admin/Sem")*@ <!--primjer-->
+    <link href="~/Content/CSS/Admin/Sem/Index.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/Suggestion.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/ClearAlert.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/TableIndex.css" rel="stylesheet" />
+}
+
+
+@section scripts{
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="~/scripts/Admin/Suggestion.js"></script>
+    <script src="~/scripts/Admin/showAlert.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".close").on("click", function () {
+                $('#clear_alert').slideUp("fast");
+            });
+
+            suggestion();
+
+            //Clear
+            $("#clear").on("click", function () {
+                $("#Naziv, #Opis, #Broj, #Status").val("");
+                $("#searchResult").empty();
+                $("#myform").submit();
+                $("#page_number_display").empty();
+                showAlert('#clear_alert');
+            });
+
+            $("#Naziv").on("input", function () {
+                $("#page_number_display").empty();
+            });
+
+            $("#Naziv, #Opis, #Broj").on("input", function () {
+                $("#myform").submit();
+            });
+
+            $("#Status").on("change", function () {
+                $("#myform").submit();
+            })
+
+        });
+
+    </script>
+}

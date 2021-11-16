@@ -1,0 +1,60 @@
+﻿@model Se.Models.SemVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Seminari</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Naziv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Naziv)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Opis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Opis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Datum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DatumDisplayString)
+            @*@Model.Datum.ToString("MM\\/dd\\/yyyy")*@
+            @*@Html.DisplayFor(model => model.Datum.ToShortDateString())*@
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PopunjenDaNe)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PopunjenDaNeText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrojPredbiljezbi) @ViewBag.Dodano
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

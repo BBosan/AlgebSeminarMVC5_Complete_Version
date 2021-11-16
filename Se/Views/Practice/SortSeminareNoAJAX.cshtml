@@ -1,0 +1,85 @@
+﻿@model IEnumerable<SemVM>
+@using Se.Models;
+@using Se.Controllers;
+
+@{
+    ViewBag.Title = "Seminari List";
+    string sort_action_name = nameof(PracticeController.SortSeminareNoAJAX);
+}
+
+<style>
+    tr .center {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    th .center {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<h2>Seminari</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+<div class="container table-responsive">
+    <table class="table table-bordered table-condensed">
+        <tr>
+            <th>
+                <span style="display: inline-block;">
+                    @Html.DisplayNameFor(model => model.Naziv)
+                </span>
+                <a href="@Url.Action(sort_action_name, new {sort = ViewBag.NazivSort})" class="glyphicon glyphicon-sort"></a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opis)
+            </th>
+            <th class="center">
+                <span style="display: inline-block;">
+                    @Html.DisplayNameFor(model => model.Datum)
+                </span>
+                <a href="@Url.Action(sort_action_name, new {sort = ViewBag.DatumSort})" class="glyphicon glyphicon-sort"></a>
+            </th>
+            <th class="center">
+                @Html.DisplayNameFor(model => model.PopunjenDaNe)
+            </th>
+            <th class="center">
+                @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naziv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Opis)
+                </td>
+                <td class="center">
+                    @Html.DisplayFor(modelItem => item.DatumDisplayString)
+                </td>
+                <td class="center">
+                    @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+                </td>
+                <td class="center">
+                    @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+                </td>
+                <td class="center">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+

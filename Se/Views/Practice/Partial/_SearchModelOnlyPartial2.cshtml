@@ -1,0 +1,44 @@
+﻿@model object
+
+@using Se.Models;
+@using Se.Controllers;
+@{ 
+    string sort_action_name = nameof(PracticeController.SearchModelOnly);
+}
+
+<tr>
+    <th class="col-sm-2">
+        <span style="display: inline-block;">
+            @*@Html.DisplayNameFor(model => model.Naziv)*@
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model) { { "sort", ViewBag.NazivSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th>
+        @*@Html.DisplayNameFor(model => model.Opis)*@
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @*@Html.DisplayNameFor(model => model.Datum)*@
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model) { { "sort", ViewBag.DatumSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th class="center">
+        @*@Html.DisplayNameFor(model => model.PopunjenDaNe)*@
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @*@Html.DisplayNameFor(model => model.BrojPredbiljezbi)*@
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model) { { "sort", ViewBag.BrojSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th></th>
+</tr>

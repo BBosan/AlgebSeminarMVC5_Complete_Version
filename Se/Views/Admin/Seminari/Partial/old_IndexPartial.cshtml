@@ -1,0 +1,63 @@
+﻿@model IEnumerable<SemVM>
+@using Se.Models;
+@using Se.Controllers;
+
+@{ 
+    string imeakcije = nameof(SeminariController.Index);
+}
+
+<table class="table table-bordered table-condensed">
+<tr>
+    <th class="col-sm-2">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.Naziv)
+        </span>
+        @Ajax.ActionLink(" ", imeakcije, new { sort = ViewBag.NazivSort }, ajaxOptions: ViewOpcije.ajaxOptions, htmlAttributes: ViewOpcije.glyphiconSort)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.Opis)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.Datum)
+        </span>
+        @Ajax.ActionLink(" ", imeakcije, new { sort = ViewBag.DatumSort }, ajaxOptions: ViewOpcije.ajaxOptions, htmlAttributes: ViewOpcije.glyphiconSort)
+    </th>
+    <th class="center">
+        @Html.DisplayNameFor(model => model.PopunjenDaNe)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+        </span>
+        @Ajax.ActionLink(" ", imeakcije, new { sort = ViewBag.BrojSort }, ajaxOptions: ViewOpcije.ajaxOptions, htmlAttributes: ViewOpcije.glyphiconSort)
+    </th>
+    <th></th>
+</tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Opis)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.DatumDisplayString)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+        </td>
+        <td class="center">
+            @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+        </td>
+    </tr>
+}
+</table>

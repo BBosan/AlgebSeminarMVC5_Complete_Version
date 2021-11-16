@@ -1,0 +1,43 @@
+﻿#bgimage {
+    background: none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:center;
+    height:200px;
+    margin:5px;
+    border-radius:3px;
+}
+
+#imgPreview{
+    display:none;
+    /*display:block;*/
+    /*margin-top:0.5em;*/
+}
+
+#imageBrowse{
+    display:none;
+}
+
+#imgPreview #remove{
+    padding:0;
+}
+
+#imgPreview #remove{
+    color:#eee;
+}
+
+#imgPreview #remove:hover{
+    color:#ff4d4d;
+}
+
+#upload_container{
+    white-space:nowrap;
+    overflow:hidden;
+    margin-bottom:0.5em;
+    /*border:2px inset #eee;*/
+    /*padding:0.1em;*/
+}
+
+#UploadButton{
+    width:100%;
+}

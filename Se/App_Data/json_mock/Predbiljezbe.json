@@ -1,0 +1,38 @@
+[
+  {
+    "idPredbiljezbe": 1,
+    "Datum": "10/10/2021",
+    "Ime": "Avis",
+    "Prezime": "Beardsell",
+    "Adresa": "265 Sommers Circle",
+    "Email": "abeardsell0@canalblog.com",
+    "BrojTelefona": "916-284-6087",
+    "idSeminar": 1,
+    "StatusDaNe": false,
+    "Seminari": { "Naziv" : "Web Design" }
+  },
+  {
+    "idPredbiljezbe": 2,
+    "Datum": "06/14/2021",
+    "Ime": "Valeria",
+    "Prezime": "Allot",
+    "Adresa": "5572 Elgar Way",
+    "Email": "vallot1@dailymotion.com",
+    "BrojTelefona": "963-394-9282",
+    "idSeminar": 5,
+    "StatusDaNe": true,
+    "Seminari": { "Naziv": "Python" }
+  },
+  {
+    "idPredbiljezbe": 3,
+    "Datum": "06/29/2021",
+    "Ime": "Donelle",
+    "Prezime": "Fishbourn",
+    "Adresa": "48063 2nd Trail",
+    "Email": "dfishbourn2@infoseek.co.jp",
+    "BrojTelefona": "292-990-2318",
+    "idSeminar": 5,
+    "StatusDaNe": false,
+    "Seminari": { "Naziv": "Python" }
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "idZaposlenik": "1",
+    "Ime": "Admin",
+    "Prezime": "Admin",
+    "UserName": "Admin",
+    "Password": "Admin"
+  },
+  {
+    "idZaposlenik": "2",
+    "Ime": "AdminX",
+    "Prezime": "AdminX",
+    "UserName": "AdminX",
+    "Password": "AdminX"
+  },
+  {
+    "idZaposlenik": "3",
+    "Ime": "Mod",
+    "Prezime": "Mod",
+    "UserName": "Mod",
+    "Password": "Mod"
+  }
+]

@@ -1,0 +1,50 @@
+﻿@model Se.Models.VMCollection
+@using Se.Models;
+@using Se.Controllers;
+@{
+    ViewBag.Title = "ViewModelCollection";
+    //var test = ViewContext.RouteData.Values;
+}
+
+<h2>ViewModelCollection</h2>
+
+@using (Ajax.BeginForm("ViewModelCollection", null, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "Ajax"
+}, new { @id = "myform" }))
+{
+    @:NAZIV: @Html.TextBox("Naziv")
+    @:OPIS: @Html.TextBox("Opis")
+    @:STATUS: @Html.DropDownList("Status", Model.DP)
+    @:BROJ: @Html.TextBox("Broj", null, new { @placeholder = "npr: >=14" })
+    @*@:STATUS: @Html.TextBox("Status")*@
+    @*@Html.DropDownList("Status", new SelectList(Model.Search.StatusDP))*@
+    @*@Html.DropDownList("Status", new SelectListItem[]{
+                new SelectListItem() {Text = "All", Value="", Selected=true},
+                new SelectListItem() {Text = "Otvoren", Value="Otvoren"},
+                new SelectListItem() {Text = "Zatvoren", Value="Zatvoren"}})*@
+
+    @*@Html.EditorFor(x => x.Search)*@
+}
+
+<br>
+
+<div id="Ajax">
+    @{ Html.RenderPartial("_ViewModelCollection"); }
+</div>
+
+@section scripts{
+ <script>
+    $(document).ready(function () {
+        $("#Naziv, #Opis, #Broj").on("keyup", function () {
+            $("#myform").submit();
+        });
+        $("#Status").on("change", function () {
+            $("#myform").submit();
+        })
+    });
+</script>   
+}
+

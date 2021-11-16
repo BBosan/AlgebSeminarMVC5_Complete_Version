@@ -1,0 +1,56 @@
+﻿@using Se.Other
+
+@{
+    string basePath = "/Content/images/UploadedImages/";
+    string avatar = basePath + User.Identity.Name + ".jpg";
+    string fullPath = Server.MapPath(avatar);
+    if (!File.Exists(fullPath))
+    {
+        avatar = basePath + "none.png";
+    }
+
+    string fullPathForTitle = Path.GetFullPath(avatar);
+
+    avatar += $"?{DateTime.Now.Ticks}";
+}
+
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("Logout", "Prijava", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a id='parentThumbPreview' class='@Html.IsActive("Admin")' href="@Url.Action("Index", "Admin")">
+                    <span>@User.Identity.Name</span>
+                    <img class="thumbPreview img-circle" src="@Url.Content(avatar)" title="@fullPathForTitle" />
+                </a>
+            </li>
+            @*<li>
+                @Html.ActionLink(User.Identity.Name, string.Empty, "Prijava", routeValues: null, htmlAttributes: new {@class= Html.IsActive("Prijava") })
+            </li>*@
+            <li>
+                <a href="javascript:document.getElementById('logoutForm').submit()">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span><span class="logoutText">Log Out</span>
+                </a>
+            </li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @*<li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
+        <li>
+            @*@Html.ActionLink("Log in", string.Empty, "Prijava", routeValues: null, htmlAttributes: new { @class = Html.IsActive("Prijava") })*@
+            <a href="@Url.Action("Index", "Prijava")" class="@Html.IsActive("Prijava")">
+                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Log In
+            </a>
+        </li>
+
+    </ul>
+}
+
+

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<PredVM>
+@using Se.Models;
+
+@{
+    ViewBag.Title = "Practice";
+}
+
+<style>
+
+</style>
+
+
+<section>
+    <br />
+    <!--ViewBag SelectList-->
+    @Html.DropDownList("DPTEST3", ViewBag.DPTEST3 as SelectList)
+
+    <br>
+    <!--Foreach SeminariDropDown2-->
+    @foreach (var item in (new PredVM()).SeminariDropDown2)
+    {
+        <text>@item.Text</text>
+        <br>
+    }
+    <br>
+    <!--SeminariDropDown2 dvije verzije DP-->
+    @Html.DropDownList("nekidp", (new PredVM()).SeminariDropDown2)
+    @Html.DropDownListFor(model => model.First().idSeminar, Model.First().SeminariDropDown2, "PLS SELECT")
+</section>
+

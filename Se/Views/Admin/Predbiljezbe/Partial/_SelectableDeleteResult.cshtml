@@ -1,0 +1,30 @@
+﻿@model string[]
+
+@using Se.Models;
+
+
+@*<script>
+    $(document).ready(function () {
+        $("#back").on("click", function (e) {
+            e.preventDefault();
+            $("#myform").submit();
+        });
+    });
+</script>*@
+
+<div>
+    <h3>Obrisane Predbiljezbe:</h3>
+    <div style="color:#ff4d4d;font-size:1em;">
+        <ol>
+            @foreach (var imeiprezim in Model)
+            {
+                <li>@imeiprezim.ToUpper()</li>
+            }
+        </ol>
+        @*<a href="@Url.Action("Index", "Predbiljezbe")" id="back" class="btn btn-info btn-sm">
+            <span class="glyphicon glyphicon-arrow-left"></span>  Back
+        </a>*@
+    </div>
+    <br>
+</div>
+

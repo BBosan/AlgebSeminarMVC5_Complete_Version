@@ -1,0 +1,17 @@
+﻿    .table-responsive .table > tbody > tr > td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-responsive .table > thead > tr > th {
+        text-align: center;
+    }
+    .mojaGRP{
+        display:inline-flex;
+        width:100%;
+    }
+    .mojaGRP .mojbtn{
+        width:100%;
+        /*margin:0 2px;*/
+        /*border-radius:0;*/
+    }

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "1",
+        "LinkText": "Home",
+        "ActionName": "index",
+        "ControllerName": "Public",
+        "Sort": "1"
+    },
+    {
+        "id": "2",
+        "LinkText": "Predbiljezbe",
+        "ActionName": "index",
+        "ControllerName": "Predbiljezbe",
+        "Sort": "3"
+    },
+    {
+        "id": "3",
+        "LinkText": "Seminari",
+        "ActionName": "index",
+        "ControllerName": "Seminari",
+        "Sort": "2"
+    }
+]

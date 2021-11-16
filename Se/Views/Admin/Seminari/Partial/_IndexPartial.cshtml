@@ -1,0 +1,119 @@
+﻿@model IEnumerable<SemVM>
+
+@using X.PagedList.Mvc;
+@using X.PagedList.Mvc.Common;
+@using X.PagedList; 
+
+@using Se.Models;
+@using Se.Controllers;
+
+@{
+    string action_name = nameof(SeminariController.Index);
+    var sq = ViewData["SearchQ"];
+    string sort = "sort";
+    var onePageOfSeminars = Model;
+    Layout = null;
+}
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th class="col-sm-2">
+                    <span style="display: inline-block;">
+                        @Html.DisplayNameFor(model => model.Naziv)
+                    </span>
+                    @Ajax.ActionLink(" ", action_name,
+                   new RouteValueDictionary(sq) { { sort, ViewBag.NazivSort } },
+                   ViewOpcije.ajaxOptions,
+                   ViewOpcije.glyphiconSort)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Opis)
+                </th>*@
+                <th>
+                    <span style="display: inline-block;">
+                        @Html.DisplayNameFor(model => model.Datum)
+                    </span>
+                    @Ajax.ActionLink(" ", action_name,
+                   new RouteValueDictionary(sq) { { sort, ViewBag.DatumSort } },
+                   ViewOpcije.ajaxOptions,
+                   ViewOpcije.glyphiconSort)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PopunjenDaNe)
+                </th>
+                <th>
+                    <span style="display: inline-block;">
+                        @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+                    </span>
+                    @Ajax.ActionLink(" ", action_name,
+                   new RouteValueDictionary(sq) { { sort, ViewBag.BrojSort } },
+                   ViewOpcije.ajaxOptions,
+                   ViewOpcije.glyphiconSort)
+                </th>
+                <th class="col-sm-2"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var item in onePageOfSeminars)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naziv)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Opis)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatumDisplayString)
+                </td>
+                <td title="@item.PopunjenDaNeText" style='color: @(item.PopunjenDaNe ? "#ff4d4d": "#5cb85c")'>
+                    @if (item.PopunjenDaNe)
+                    {
+                        <span class="glyphicon glyphicon-folder-close"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                    }
+                    @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+                </td>
+                <td>
+                    <div class="mojaGRP btn-group btn-group-sm">
+                        <a href="@Url.Action("Edit", "Seminari", new { id = item.id })" class="mojbtn btn btn-success">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                        <a href="@Url.Action("Details", "Seminari", new { id = item.id })" class="mojbtn btn btn-info">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                        <a href="@Url.Action("Delete", "Seminari", new { id = item.id })" class="mojbtn btn btn-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })*@
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+
+    @Html.PagedListPager((IPagedList)onePageOfSeminars, page => Url.Action(action_name,
+    new RouteValueDictionary(sq) { { "page", page }, { "sort", ViewBag.CurrentSort } }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+        ViewOpcije.pagedListRenderOpcije,
+        ViewOpcije.ajaxOptions))
+}
+else
+{
+    <h2>NEMA REZULTATA!</h2>
+}

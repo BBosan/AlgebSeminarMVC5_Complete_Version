@@ -1,0 +1,137 @@
+﻿@model SemVM
+
+@using Se.Models;
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h3>Brisanje Seminara?</h3>
+<div>
+<hr />
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Naziv)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Naziv)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Datum)
+    </dt>
+
+    <dd>
+        @*@Model.Datum.ToString("MM\\/dd\\/yyyy")*@
+        @Html.DisplayFor(model => model.DatumDisplayString)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.PopunjenDaNe)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.PopunjenDaNeText)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.BrojPredbiljezbi)
+        @if (Model.Predbiljezba.Count() > 0)
+        {
+            <button id="transfer" title="Kopiraj Predbiljezbe U Drugi Seminar?" type="button" class="btn btn-link">
+                <span class="glyphicon glyphicon-share-alt"></span>
+            </button>
+        }
+        <span id="idUDisplay"></span>
+        <button title="Cancel?" type="button" class="btn btn-link" id="remove">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </dd>
+</dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="container">
+            <!-- Modal -->
+            <div class="modal fade" id="mojModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <h4 class="modal-title">Kopiranje Predbiljezbi!</h4>
+                        </div>
+                        <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <ul id="listaSeminara">
+                                            @foreach (var item in ViewBag.ListaSeminara as IEnumerable<SelectListItem>)
+                                            {
+                                                <li><button type="button" class="btn btn-link" value="@item.Value" style='@(item.Disabled ? "color:#5cb85c" : "color:#ff4d4d")'>@item.Text</button></li>
+                                            }
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-xs-6">
+                                        <p id="info">
+                                            <strong>
+                                                Odaberite seminar u koji zelite kopirati predbiljezbe.
+                                            </strong>
+                                        </p>
+                                    </div>
+
+                                    <div id="hidden_desc_container" class="col-xs-6">
+                                        <div id="hidden_desc"></div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <div class="btn-group mojJustified"> 
+                                <button type="button" id="cancel" class="btn btn-danger" data-dismiss="modal">Cancel</button> 
+                                <button type="button" id="ok" class="btn btn-primary" data-dismiss="modal">Ok</button>  
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Back to List", "Index", null, new { @class="btn btn-default" })
+            <input type="submit" value="Delete" id="submit" class="btn btn-default"/>
+            @Html.Hidden("idU")
+            @Html.Hidden("BrojPredb", Model.BrojPredbiljezbi)
+
+             <!--Custom CheckBox-->
+            <div id="chkbox-inline" class="checkbox-inline">
+                <label>
+                    <span id="checkbox_button_wrapper" class="btn btn-default">
+                        <input type="checkbox" name="check" id="check" value="true" disabled />
+                        <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                        Potvrdite!
+                    </span>
+                </label>
+            </div>
+            <!--Custom CheckBox END-->
+        </div>
+    }
+</div>
+
+@section styles{
+    <link href="~/Content/CSS/Admin/Sem/Delete.css" rel="stylesheet" />
+    <link href="~/Content/CSS/Admin/Shared/Checkbox.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="~/scripts/Admin/DeleteDialog.js"></script>
+}

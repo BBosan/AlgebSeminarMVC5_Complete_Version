@@ -1,0 +1,131 @@
+﻿@model IEnumerable<Se.Models.SemVM>
+@using Se.Models;
+@{
+    ViewBag.Title = "ModelSearch";
+}
+
+    <h2>ModelSearch</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+<!--NO BEGIN FORM JUST TEXTBOX VERZIJA-->
+@*<span>
+    Find by Naziv:
+    @Html.TextBox("Naziv")
+</span>
+<span>
+    Find by Opis:
+    @Html.TextBox("Opis")
+</span>
+<span>
+    Find by Status:
+    @Html.TextBox("Status")
+</span>*@
+<!--NO BEGIN FORM JUST TEXTBOX VERZIJA-->
+
+<!--NORMAL BEGIN FORM VERZIJA-->
+@*@using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "myform" }))
+{
+    <span>
+        Find by Naziv:
+        @Html.TextBox("Naziv")
+    </span>
+    <span>
+        Find by Opis:
+        @Html.TextBox("Opis")
+    </span>
+    <span>
+        Find by Status:
+        @Html.TextBox("Status")
+    </span>
+}*@
+<!--NORMAL BEGIN FORM VERZIJA-->
+
+<!--AJAX BEGIN FORM VERZIJA-->
+@using (Ajax.BeginForm("ModelSearch", "Practice", FormMethod.Post, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "Ajax"
+    }, new { id = "myform" }))
+    {
+        @:NAZIV: @Html.TextBox("Naziv") 
+        @:OPIS: @Html.TextBox("Opis") 
+        @:STATUS: @Html.TextBox("Status")
+        @:BROJ: @Html.TextBox("Broj", null, new { @placeholder = "npr: >=14"})
+    }
+<!--AJAX BEGIN FORM VERZIJA-->
+
+
+<br><br>
+
+
+<div id="Ajax">
+    @{ Html.RenderPartial("_SortSeminareAJAXPartial"); }
+</div>
+
+
+
+
+@section scripts{
+<script>
+    //live trazilica
+
+    /*NO BEGIN FORM JUST TEXTBOX VERZIJA*/
+    @*function AjaxFunction () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ModelSearch", "Practice")',
+            data: { Naziv: $("#Naziv").val(), Opis: $("#Opis").val(), Status: $("#Status").val() },
+            datatype: "html",
+            success: function (data) {
+                $("#Ajax").html(data);
+            }
+        });
+    };*@
+    /*NO BEGIN FORM JUST TEXTBOX VERZIJA*/
+
+
+    /*NORMAL BEGIN FORM VERZIJA*/
+    @*function AjaxFunction() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ModelSearch", "Practice")',
+            data: $('#myform').serialize(),
+            datatype: "html",
+            success: function (data) {
+                $("#Ajax").html(data);
+            }
+        });
+    };*@
+    /*NORMAL BEGIN FORM VERZIJA*/
+
+
+
+    $(document).ready(function () {
+        /*NO BEGIN FORM JUST TEXTBOX VERZIJA*/
+        //$("#Naziv, #Opis, #Status").on("keyup", AjaxFunction);
+        /*NO BEGIN FORM JUST TEXTBOX VERZIJA*/
+
+        /*NORMAL BEGIN FORM VERZIJA*/
+        //$("#Naziv, #Opis, #Status").on("keyup", function () {
+        //    $("#myform").submit();
+        //});
+        /*NORMAL BEGIN FORM VERZIJA*/
+
+        /*AJAX BEGIN FORM VERZIJA*/
+        $("#Naziv, #Opis, #Status, #Broj").on("keyup", function () {
+            $(this).closest("form").submit();
+        });
+        /*AJAX BEGIN FORM VERZIJA*/
+
+
+        //test with change
+        //$("#Naziv, #Opis, #Status").change(function () {
+        //    $("#myform").submit();
+        //});
+    });
+</script>    
+}

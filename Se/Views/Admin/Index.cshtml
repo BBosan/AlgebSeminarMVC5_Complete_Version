@@ -1,0 +1,351 @@
+﻿@model List<Se.Pages>
+
+@{
+    ViewBag.Title = "Index";
+    string basePath = "/Content/images/UploadedImages/";
+    string avatar = basePath + User.Identity.Name + ".jpg";
+    string fullPath = Server.MapPath(avatar);
+    if (!File.Exists(fullPath))
+    {
+        avatar = basePath + "none.png";
+    }
+
+    string fullPathForTitle = Path.GetFullPath(avatar);
+
+    avatar += $"?{DateTime.Now.Ticks}";
+}
+
+
+<div id="admin-wrapper" class="container-fluid">
+    <h2>
+        @(User.Identity.Name+" Panel")
+    </h2>
+
+    <div class="row">
+    <br />
+        <div class="col-md-3 text-center" >
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <h4>@User.Identity.Name</h4>
+                </div>
+
+                <div class="panel-body">
+                    <img src="@avatar" class="thumbnail thumbPreviewProfileCard">
+                </div>
+
+                <div class="panel-body">
+                        <div id="upload_container">
+                            <label for="imageBrowse" class="btn btn-default btn-sm">Select Image</label>
+                            <input type="file" id="imageBrowse" />
+                            <span id="fileName">No file selected</span>
+                        </div>
+                        <div id="imgPreview" class="thumbnail">
+                            <div id="bgimage"></div>
+                            <div class="caption">
+                                <button id="remove" class="btn-link"><i class="glyphicon glyphicon-remove"></i></button><span id="description"></span>
+                            </div>
+
+                            <button class="btn btn-default" id="UploadButton">UPLOAD!</button>
+                        </div>
+                </div>
+
+                <div class="panel-footer">
+                    Lorem Ipsum
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-5 text-center">
+            <section>
+                <p>
+                    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+                </p>
+            </section>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Navbar Sort</h4>
+                </div>
+
+                <div class="panel-body">
+                    <div id="sort_lista">
+                        <ul id="sortable">
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <li id="id_@item.id" class="@item.ActionName">@item.LinkText</li>
+                                }
+                            }
+                            else
+                            {
+                                <li>Navbar Je Prazan!</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-footer">
+                    Lorem Ipsum
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<!--https://stackoverflow.com/a/44128269-->
+
+@section styles{
+    <link href="~/Content/CSS/Admin/PrijavaAdminProfile/AvatarImageUpload.css" rel="stylesheet" />
+    <style>
+        /*#sort_lista {
+        text-align: center;
+        padding:5px 20px;
+        }*/
+
+       #sort_lista #sortable input{
+            background:#eee;
+            color:#333;
+            padding-left:2%;
+            max-width:100%;
+            width:100%;
+            height:100%;
+            position:absolute;
+            top:0;bottom:0;left:0;right:0;
+        }
+
+        #sort_lista ul {
+            list-style-type: none;
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            width:450px;
+            max-width: 100%;
+            padding:0 2%;
+            border: 1px solid #eee;
+            position:relative;
+            margin:0 auto;
+        }
+
+
+        #sort_lista ul li {
+            position:relative;
+            border: 1px solid #eee;
+            max-width:100%;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:10px 0;
+            padding:15px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+
+        #sort_lista ul li:hover{
+            cursor: grab;
+            color: #fff;
+            background: #4d79ff;
+            border-color:blanchedalmond;
+        }
+
+
+        /*Sortable*/
+        .ui-state-highlight {
+            outline: 3px inset #333;
+            outline-offset: -2px;
+            box-shadow: inset 0 0 25px #050505;
+        }
+
+    </style>
+}
+
+@section scripts{
+
+    <!-- Image Upload -->
+    <script src="~/scripts/Admin/AvatarImageUpload.js"></script>
+    <script src="~/scripts/Admin/Truncate.js"></script>
+
+    <!-- Sortable -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/2.0.1/jquery.mobile-events.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            /* Image Upload */
+            $("#remove").click(function () {
+                ClearPreview();
+            });
+
+            $("#imageBrowse").change(function () {
+                var File = this.files;
+                var filename = File[0].name;
+                $("#fileName").text(truncate(filename, 10));
+                if (File && File[0]) {
+                    ReadImage(File[0]);
+                }
+            });
+
+            $("#UploadButton").click(function (e) {
+                e.preventDefault();
+                UploadImage();
+            });
+            /*_______________Image Upload END_____________*/
+
+
+
+            /* Editable LinkText */
+            var oriVal;
+            var ID;
+            $("#sortable").on('dblclick', 'li', function () {
+                /*https://stackoverflow.com/questions/4589964/jquery-disable-click*/
+                /*https://stackoverflow.com/questions/37650335/how-to-disable-all-the-click-events-for-a-particular-li-item-in-all-the-files*/
+                /*https://stackoverflow.com/a/34665886*/
+                //$('#sortable > li').not(this).each(function () {
+                //    $(this).slideUp("slow");
+                //    //$(this).on('dblclick', function () { return false; });
+                //    //$(this).css("background", "red");
+                //});
+
+                oriVal = $(this).text();
+                ID = $(this).prop('id');
+                //$(this).text("");
+                $("<input type='text' placeholder='Editing...'>").appendTo(this).focus().val(oriVal);
+                //$('#sortable input[type=text]').val(oriVal);
+            });
+
+            $("#sortable").on('keyup', 'li > input', function (e) { 
+                if (e.key == "Enter") {
+
+                    //$('#sortable > li').not(this).each(function () {
+                    //    $(this).slideDown("slow");
+                    //});
+
+                    //$(this).blur();
+                    var $this = $(this);
+                    $this.parent().text($this.val() || oriVal);
+                    $this.remove(); // Don't just hide, remove the element.
+
+                    //POST
+                    var url = '@Url.Action("EditNavbarItemText", "Admin")';
+                    $.post(url, { id: parseInt(ID.replace("id_", '')), title: $this.val() },
+                        function (data) { console.log(data) })
+                        .done(function () {
+                            console.log("done");
+                            var navbarItemId = '[data-block-id=' + ID + ']';
+                            var parent = $('#main_nav_za_JQuery').find(navbarItemId).children();
+                            parent.text($this.val() || oriVal);
+                        });
+                }
+            });
+
+            //$("#sortable").on('focusout', 'li > input', function () {
+
+            //});
+
+            $("#sortable").on('blur', 'li > input', function () {
+                //$('#sortable > li').not(this).each(function () {
+                //    $(this).slideDown("slow");
+                //});
+                $(this).remove(); 
+            });
+            /*______________Editable LinkText END______________*/
+
+
+
+            /* Sortable */
+            $("#sort_lista ul li").on("taphold", function () {
+                $(this).css("background-color", "#ff4d4d");
+            });
+
+            if (navigator.userAgent.indexOf("Firefox") < 0) {
+                $("#sort_lista ul").css("touch-action", "auto");
+            } else {
+                $("#sort_lista ul").css("touch-action", "pan-x");
+            }
+
+            $("#sort_lista ul").sortable({
+                axis: "y",
+                containment: "parent",
+                opacity: 0.9,
+                items: "> li",
+                placeholder: "ui-state-highlight",
+                cursor: "move",
+                tolerance: "pointer", /*moze i intersect*/
+                forceHelperSize: true,
+                forcePlaceHolderSize: true,
+                revert: 300,
+                scroll: false,
+                start: function (event, ui) {
+                    currentIndex = ui.helper.index(); //on change
+
+                    $(this).css("touch-action", "pan-x");
+                    ui.placeholder.height(ui.item.height());
+                    ui.item.css({ "outline": "2px dashed #eee", "background-color": "#eee", "color": "#333" });
+                    ui.item.animate({ "opacity": "0.6" }, "slow");
+                    ui.item.html("<span style='display:inline-block;border-bottom:1px solid #333'>" + ui.item.text() + "</span>");
+                    $(this).css("overflow", "hidden"); //bug fix
+                    $(this).animate({ width: "60%" }, "slow", function () {
+                    });
+                },
+                stop: function (event, ui) {
+                    if (navigator.userAgent.indexOf("Firefox") < 0) {
+                        $(this).css("touch-action", "auto");
+                    }
+
+                    $(this).animate({ width: "450px" }, "slow", function () {
+                    });
+
+                    ui.item.css({ width: 0 })
+                                 .animate({ width: "100%", "opacity": "1", "background-color": "transparent", "color": "#eee" }, "slow", function () {
+                                     //var styleObject = $('my-selector').prop('style');
+                                     //styleObject.removeProperty('background-color');
+                                     ui.item.removeAttr('style'); //removes whole inline style after animation
+                                 });
+
+                    ui.item.css("outline", "none");
+
+                    //$("#sort_lista ul li").removeAttr('style'); //removes from all- all at once except the current (must be up in callback if i want to remove it as well)
+                    //ui.item.css({ "border-color": "#4d79ff", "color":"yellow" });
+
+                    ui.item.html(ui.item.text());
+                },
+                change: function (event, ui) {
+                    var indexCount = ui.item.parent().find('li:not(.ui-sortable-helper)');
+                    var sortId = ui.item.attr('id').split(' ')[0];
+                    var sortData = '[data-block-id=' + sortId + ']';
+                    var parent = $('#main_nav_za_JQuery').not(ui.item.parent());
+                    if (currentIndex > ui.placeholder.index()) {
+                        parent.find('li').eq(indexCount.index(ui.placeholder)).before(parent.find(sortData));
+                    }
+                    else
+                        parent.find('li').eq(indexCount.index(ui.placeholder)).after(parent.find(sortData));
+                        currentIndex = ui.placeholder.index();
+                },
+                update: function (event, ui) {
+                    var mainNav = $("#main_nav_za_JQuery li a");
+                    var ids = $(this).sortable("serialize");
+                    var url = '@Url.Action("ReorderPages", "Admin")';
+                    $.post(url, ids, function (data) {});
+                    mainNav.animate({ "background-color": "#222", "color": "#c8c8c8" }, "slow")
+                           .animate({ "background-color": "transparent", "color": "#fff" }, "slow");
+
+                    $("#main_nav_za_JQuery li").animate({ "left": "10%" }).animate({ "left": 0 });
+                }
+            }).disableSelection();
+
+        }) //doc ready end
+    </script>
+
+}

@@ -1,0 +1,94 @@
+﻿@model IEnumerable<SemVM>
+
+@using X.PagedList.Mvc; @*import this so we get our HTML Helper*@
+@using X.PagedList.Mvc.Common;
+@using X.PagedList; @*import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+
+@using Se.Models;
+@using Se.Controllers;
+
+@{
+    string action_name = nameof(PracticeController.SearchModelOnly);
+    object smq = ViewData["SearchQ"];
+    string sort = "sort";
+    string data_key = "data-current-sort";
+    var data_val = ViewBag.CurrentSort;
+}
+
+@if (Model.Any())
+{
+<table class="table table-striped table-condensed">
+    <tr>
+        <th class="col-sm-2">
+            <span style="display: inline-block;">
+                @Html.DisplayNameFor(model => model.Naziv)
+            </span>
+            @Ajax.ActionLink(" ", action_name,
+       new RouteValueDictionary(smq) { { sort, ViewBag.NazivSort } },
+       ViewOpcije.ajaxOptions, new Dictionary<string, object>(ViewOpcije.glyphiconSort) { { data_key, data_val } }
+       @*ViewOpcije.glyphiconSort*@)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Opis)
+        </th>
+        <th class="center">
+            <span style="display: inline-block;">
+                @Html.DisplayNameFor(model => model.Datum)
+            </span>
+            @Ajax.ActionLink(" ", action_name,
+       new RouteValueDictionary(smq) { { sort, ViewBag.DatumSort } },
+       ViewOpcije.ajaxOptions, new Dictionary<string, object>(ViewOpcije.glyphiconSort) { { data_key, data_val } }
+       /*ViewOpcije.glyphiconSort*/)
+        </th>
+        <th class="center">
+            @Html.DisplayNameFor(model => model.PopunjenDaNe)
+        </th>
+        <th class="center">
+            <span style="display: inline-block;">
+                @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+            </span>
+            @Ajax.ActionLink(" ", action_name,
+       new RouteValueDictionary(smq) { { sort, ViewBag.BrojSort } },
+       ViewOpcije.ajaxOptions, new Dictionary<string, object>(ViewOpcije.glyphiconSort) { { data_key, data_val } }
+       /*ViewOpcije.glyphiconSort*/)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.OnePageOfProducts as IEnumerable<SemVM>)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naziv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opis)
+            </td>
+            <td class="center">
+                @Html.DisplayFor(modelItem => item.DatumDisplayString)
+            </td>
+            <td class="center">
+                @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+            </td>
+            <td class="center">
+                @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+            </td>
+            <td class="center">
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.PagedListPager((IPagedList)ViewBag.OnePageOfProducts, page => Url.Action(action_name,
+    new RouteValueDictionary(smq) { { "page", page }, { "sort", ViewBag.CurrentSort } }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+        ViewOpcije.pagedListRenderOpcije,
+        ViewOpcije.ajaxOptions))
+}
+else
+{
+    <h2>NEMA REZULTATA</h2>
+}

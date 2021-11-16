@@ -1,0 +1,72 @@
+﻿@model IEnumerable<SemVM>
+@using Se.Models;
+@using Se.Controllers;
+
+@{
+    ViewBag.Title = "Seminari List";
+    string imeakcije = nameof(SeminariController.Index);
+    string imekontrolera = nameof(SeminariController).Replace(nameof(Controller), "");
+}
+
+
+<style>
+    tr .center {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    th .center {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+
+<h2>Seminari</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+
+<p>
+    Find by Naziv: @Html.TextBox("SearchString")
+</p>
+
+
+
+<div class="container table-responsive">
+    <div id="Ajax">
+        @{ Html.RenderPartial("_IndexPartial"); }
+    </div>
+</div>
+
+
+<script>
+    function fnSuccess() {
+        $("#Ajax td").css("font-style", "italic");
+    }
+
+
+    //live trazilica
+    function AjaxFunction () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action(imeakcije, imekontrolera)',
+            data: {
+                'SearchString': $('#SearchString').val(),
+            },
+            datatype: "html",
+            success: function (data) {
+                $('#Ajax').html(data);
+            }
+        });
+    };
+
+
+    $(document).ready(function () {
+        $("#SearchString").on("keyup", AjaxFunction);
+    });
+
+
+</script>

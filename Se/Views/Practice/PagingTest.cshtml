@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "PagingTest";
+}
+
+<h2>PagingTest</h2>
+
+<button id="btnSearch" type="button" value="Search">GET Records</button>
+<span id="totalRecords"></span>
+<div id="result"></div>
+@*<div id="paging"></div>*@
+
+<span id="prev"></span>
+<span id="next"></span>
+
+@section scripts{
+    <script>
+        var pageSize = 11;
+        function pageData(e) {
+            var skip = e == 1 ? 0 : (e * pageSize) - pageSize;
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("FetchCustomers", "Practice")',
+                data: { "take": pageSize, "skip": skip, "Page" : e},
+                dataType: "json",
+                success: function (data) {
+                    $('#next').empty();
+                    $('#prev').empty();
+
+                    setNextPrevBtn(data);
+                    printCustomer(data);
+                }
+            });
+            return false;
+        }
+
+        function setNextPrevBtn(data) {
+            if (data.Page > 1) {
+                $('#prev').html("<button type='button' class='btn btn-success' onClick=\"pageData(" + (data.Page - 1) + ")\"> PREV </button>&nbsp;");
+            }
+            if (data.Page < pageSize - 1) {
+                $('#next').html("<button type='button' class='btn btn-success' onClick=\"pageData(" + (data.Page + 1) + ")\"> NEXT </button>&nbsp;");
+            }
+        }
+
+        $(document).ready(function () {
+
+            $("#btnSearch").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("FetchCustomers", "Practice")',
+                    data: { "take": pageSize, "skip": 0 },
+                    dataType: "json",
+                    success: function (data) {
+                        var total = data.TotalRecords;
+                        if (total > 0) {
+                            printCustomer(data);
+                            $("#paging").text("");
+                            // Get the page count by dividing the total records
+                            // by the page size. This has to be rounded up
+                            // otherwise you might not get the last page
+                            //var pageTotal = Math.ceil(total / pageSize);
+
+                            //for (var i = 0; i < pageTotal; i++) {
+                            //    console.log(i + 1);
+                            //    $("#paging").append("<a href=\"#\" onClick=\"pageData(" + (i + 1) + ")\">" + (i + 1) + "</a>&nbsp;");
+                            //}
+
+                            setNextPrevBtn(data);
+                        }
+                        else {
+                            $("#paging").text("No records were found.");
+                        }
+                        $("#totalRecords").text("Total records: " + total);
+                    }
+                });
+            });
+        });
+
+
+        // This function accepts a customer object
+        // and prints the results to the div element.
+        function printCustomer(data) {
+            const id = "#result";
+
+            $(id).text("");
+            var customers = data.Customers;
+
+            $.each(customers, function (i, item) {
+                $(id).append(item.Ime + ", ");
+                $(id).append(item.Prezime + ", ");
+                $(id).append(item.Seminari.Naziv + ", ");
+                $(id).append(item.Email + "<br />");
+            });
+
+        }
+
+    </script>
+}

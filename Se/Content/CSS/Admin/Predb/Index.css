@@ -1,0 +1,110 @@
+﻿ /* Hide vertical scrollbar */        
+        /*body {
+          overflow-y: hidden;
+        }*/
+
+        /*Selectable*/
+        #feedback {
+            font-size: 1.2em;
+            /*width:50%;*/
+        }
+
+        #selectable .ui-selecting {
+            background: #FECA40;
+        }
+
+        #selectable .ui-selected {
+            background: #F39814;
+            color: white;
+            /*border-bottom: 1px solid #191919;*/
+        }
+
+        #selectable {
+            /*list-style-type: none;*/
+            margin: 0;
+            padding: 0;
+            /*width: 60%;*/
+        }
+
+        #za_brisat_submit{
+            display:none;
+            position:fixed;
+            padding:0;
+            margin:0;
+            right:0;
+            left:0;
+            bottom:0;
+            z-index:1000;
+            height:70px;
+            background:#121416;
+            width:100%;
+        }
+
+        #za_brisat_submit_button{
+            display:block;
+            text-decoration:none;
+            color:#fc6969;
+            color:rgba(254, 90, 90, 0.62);
+            outline:none;
+            border: none;
+            margin:0 auto;
+            height:100%;
+            padding:0;
+            transition: background 0.4s ease, padding 0.4s ease-out, color 0.4s ease;
+        }
+
+        #za_brisat_submit_button:hover{
+            padding:0 2%;
+            background: #222;
+            color:#ff4d4d;
+            transition: background 0.4s ease, padding 0.4s ease-out, color 0.4s ease;
+        }
+
+        /*#za_brisat_submit_button{
+            position:relative;
+            display:block;
+            text-decoration:none;
+            color:#ff4d4d;
+            padding:0;
+            outline:none;
+            border: none;
+            margin:0 auto;
+            font-size:25px;
+            top:20%;
+        }*/
+
+        /*https://stackoverflow.com/questions/14082826/bootstrap-icons-glyphicons-are-positioned-slightly-up-when-using-google-fonts*/
+
+        #za_brisat_submit_button span{
+            vertical-align:middle;
+            /*margin-top: -12px;*/
+            font-size:35px;
+        }
+
+        .highlight{
+            text-decoration:line-through;
+            text-decoration-color:#ff4d4d;
+        }
+        /*Selectable END*/
+
+
+        #Ajax {
+            margin-top: 2em;
+        }
+
+        /*.form-group:not(:last-child) {
+            margin-right: 1em;
+        }*/
+
+        /*tr .center {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th .center {
+            text-align: center;
+            vertical-align: middle;
+        }*/
+        /*.inline{
+            display:inline;
+        }*/

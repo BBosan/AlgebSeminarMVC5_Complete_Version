@@ -1,0 +1,145 @@
+﻿@model SearchModel
+
+@using Se.Models;
+
+
+@{
+    ViewBag.Title = "SearchModelOnly";
+    //SearchModel smq = ViewData["SearchQ"] as SearchModel ?? new SearchModel();
+
+}
+
+<head>
+    <style>
+        #Ajax{
+            margin-top:2em;
+        }
+        #filterItemsContainer, #filterItemsContainer2{
+            margin-top:2em;
+        }
+        .filterItem:not(:last-child){
+            margin-right:0.5em;
+        }
+
+        .active{
+            background-color: #333 !important;
+        }
+    </style>
+</head>
+
+
+@using (Ajax.BeginForm(null, null, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "Ajax"
+}, new { @id = "myform" }))
+{
+    <div id="filterItemsContainer">
+        NAZIV: @Html.TextBoxFor(x => x.Naziv, new { @class = "filterItem" })
+        OPIS: @Html.TextBoxFor(x => x.Opis, new { @class = "filterItem" })
+        @*STATUS: @Html.DropDownListFor(x => x.Status, Model.DP_Seminari_Status, new { @class = "filterItem" })*@
+        @*@Html.HiddenFor(x=>x.Status)*@
+        BROJ: @Html.TextBoxFor(x => x.Broj, null, new { @placeholder = "npr: >=14", @class = "filterItem" })
+
+        <!--Vjezba-->
+        <div class="btn-group">
+            @foreach (var s in Model.VjezbaSelected)
+            {
+                @*@Html.ActionLink(s.Text, "SearchModelOnly", 
+                new { sort = ViewBag.CurrentSort, Status = s.Value }, 
+                new { @style = "margin-right:10px;margin-top:10px;", @class = "btn btn-primary btn-sm " + (s.Selected ? "active" : "") })*@
+
+            <!--Vjezba AJAX--> //data koristim jer mi treba value a ne text
+                <button type="button" id="@s.Text" data-value="@s.Value" class="@(s.Selected ? "btn btn-primary btn-sm active" : "btn btn-primary btn-sm ")">@s.Text</button>
+             <!--Vjezba AJAX-->
+            }
+        </div>
+        <!--Vjezba-->
+    </div>
+}
+
+<!--Vjezba-->
+<div id="filterItemsContainer2">
+    <div class="btn-group  btn-group-justified">
+        @foreach (var s in Model.VjezbaSelected)
+        {
+        <!--Vjezba AJAX--> //data koristim jer mi treba value a ne text
+            <a href="#" id="@s.Text" data-value="@s.Value" class="@(s.Selected ? "btn btn-primary btn-sm active" : "btn btn-primary btn-sm ")">@s.Text</a>
+        <!--Vjezba AJAX-->
+        }
+    </div>
+</div>
+<!--Vjezba-->
+
+
+<div id="Ajax">
+    @{Html.RenderPartial("_SearchModelOnlyPartial", ViewBag.OnePageOfProducts as IEnumerable<SemVM> @*Model.semVMLista*@);}
+    <!--ILI OVO ne moze oboje u isto vrijeme -->
+    @*<table class="table table-bordered table-condensed">
+        @Html.Partial("_SearchModelOnlyPartial2", Model.RouteReflect)
+        @Html.Partial("_SearchModelOnlyPartial2List", Model.semVMLista)
+    </table>*@
+</div>
+
+
+
+@section scripts{
+  <script>
+        //$(document).ready(function () {
+            //$("#Naziv, #Opis, #Broj").on("keyup", function () {
+                //$("#myform").submit(); //ovo treba kad nema ajax
+            //});
+            //$("#Status").on("change", function () {
+            //    $("#myform").submit(); //ovo ne treba  kad nemam dropdowna
+            //})
+
+            //ovo treba samo za ajax
+            //$('a.filterItem').click(function () {
+            //    $("a.filterItem").removeClass('active');
+            //    $(this).addClass('active');
+            //});
+
+        //});
+
+
+        //ajax live trazilica/filter
+        var AjaxFunction = function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SearchModelOnly", "Practice")',
+                data: {
+                    'Naziv': $('#Naziv').val(),
+                    'Opis': $('#Opis').val(),
+                    'Broj': $('#Broj').val(),
+                    //'Status': $('#filterItemsContainer').find('button.active').data("value"),
+                    'Status': $('#filterItemsContainer2').find('a.active').data("value"),
+                    'sort': $("a.glyphicon").data("current-sort"), //da bi sejvo sort kada stiskam Status filter i searcham
+                },
+                datatype: "html",
+                success: function (data) {
+                    $('#Ajax').html(data);
+                }
+            });
+        };
+
+        $(document).ready(function () {
+            $("#Naziv, #Opis, #Broj").on("keyup", AjaxFunction);
+
+
+            //-------------------
+            //$('button').click(function () {
+            //    $("button").removeClass('active');
+            //    $(this).addClass('active');
+            //    AjaxFunction();
+            //});
+
+            $('#filterItemsContainer2 a').click(function () {
+                $("#filterItemsContainer2 a").removeClass('active');
+                $(this).addClass('active');
+                AjaxFunction();
+            });
+
+        });
+</script>  
+}

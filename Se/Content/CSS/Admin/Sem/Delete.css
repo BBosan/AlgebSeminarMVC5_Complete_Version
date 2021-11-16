@@ -1,0 +1,147 @@
+﻿/*body{
+overflow-x: hidden;
+}*/ /*samo za h3 animaciju*/
+
+.mojJustified {
+/*display: inline-flex;*/
+white-space: nowrap;
+width: 100%;
+font-size: 0; /*GAP BETWEEN BUTTONS WHEN FLOAT NONE FIX*/
+}
+
+/*.mojJustified #cancel,*/ .mojJustified #ok {
+float: none;
+}
+
+.mojJustified #cancel {
+border-radius: 6px 6px 6px 6px;
+overflow: hidden;
+white-space: nowrap;
+width: 100%;
+}
+
+.mojJustified #ok {
+border-radius: 0 6px 6px 0;
+display: none;
+opacity: 0;
+width: 0;
+overflow: hidden;
+white-space: nowrap;
+}
+
+
+/*-------------*/
+
+.modal-body {
+height: 270px;
+max-height: 100%;
+overflow: auto;
+}
+
+#info, #hidden_desc_container, #listaSeminara, .modal-title {
+text-align: center;
+}
+
+#info {
+padding: 0 0.3em;
+}
+
+#hidden_desc_container h2 {
+margin-top: 0.2em;
+}
+
+#hidden_desc_container, #listaSeminara {
+margin: 0;
+padding: 0;
+background-color: #3d444a;
+}
+
+#hidden_desc_container, #hidden_desc {
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+}
+
+#hidden_desc_container {
+position: -webkit-sticky;
+position: sticky;
+top: -1.3em;
+opacity: 0.5;
+}
+
+#hidden_desc {
+border-top: 1px solid #9d9d9d;
+display: none;
+padding: 0.2em;
+margin: 0 0.5em 0.5em 0.5em;
+}
+
+#hidden_desc, #listaSeminara li button {
+background: #363c41;
+}
+
+#listaSeminara, #listaSeminara li button {
+border-bottom-right-radius: 5px;
+border-top-right-radius: 5px;
+}
+
+#listaSeminara {
+list-style: none;
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+min-width: 100%;
+}
+
+#listaSeminara li button {
+text-decoration: none;
+width: 102%;
+margin-bottom: 0.2em;
+margin-top: 0.2em;
+}
+
+#listaSeminara li:first-child button {
+margin-top: 0;
+}
+
+#listaSeminara li:last-child button {
+margin-bottom: 0;
+}
+
+#listaSeminara li button:hover, #listaSeminara li button:focus {
+background-color: #2e3338;
+}
+
+#listaSeminara li button:focus {
+outline: none;
+border: 1px solid #9d9d9d;
+border-top-right-radius: 5px;
+border-bottom-right-radius: 5px;
+}
+
+#listaSeminara .active {
+outline: none;
+border: 1px solid #9d9d9d;
+border-top-right-radius: 5px;
+border-bottom-right-radius: 5px;
+}
+
+#idU {
+margin: 0 auto;
+max-width: 100%;
+}
+
+#remove {
+display: none;
+}
+
+#idUDisplay, #hidden_desc {
+color: #4d79ff;
+}
+
+#remove, #transfer {
+padding: 0;
+}
+
+/*-----------------------------------------------------------CheckBOX-----------------------------------------------------------*/
+#chkbox-inline {
+padding: 0;
+display: none;
+}

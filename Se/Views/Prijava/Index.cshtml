@@ -1,0 +1,90 @@
+﻿@model Se.Models.PrijavaVM
+
+@{
+    ViewBag.Title = "Prijava";
+}
+
+<div class="container-fluid">
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h2>Vec Ste Prijavljeni!</h2>
+}
+else
+{
+    <h2>Prijava</h2>
+
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <br />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @Value = "Admin" })
+                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @Value = "Admin" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <select id="login_drop" class="btn btn-default dropdown-toggle form-control">
+                        <option selected disabled>Account</option>
+                        <option value="AdminX">AdminX</option>
+                        <option value="Mod">Mod</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input id="submit-btn" type="submit" value="Login" class="btn btn-default" />
+
+                    <!--Custom CheckBox-->
+                    <div id="chkbox-inline" class="checkbox-inline">
+                        <label>
+                            <span id="checkbox_button_wrapper" class="btn btn-default">
+                                <input type="checkbox" name="Zapamti" id="Zapamti" value="true" />
+                                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                Zapamti?
+                            </span>
+                        </label>
+                    </div>
+                    <!--Custom CheckBox END-->
+                </div>
+            </div>
+
+        </div>
+    }
+}
+</div>
+
+@section styles{
+    <link href="~/Content/CSS/Admin/Shared/Checkbox.css" rel="stylesheet" />
+}
+
+@section scripts{
+   <script>
+    $(document).ready(function() {
+        $("#login_drop").change(function () {
+            if ($(this).val() == "AdminX") {
+                $("#UserName, #Password").val("AdminX");
+            } else if ($(this).val() == "Mod") {
+                $("#UserName, #Password").val("Mod");
+            }
+        });
+    });
+</script> 
+}

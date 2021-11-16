@@ -1,0 +1,72 @@
+﻿@model Se.Models.VMCollection
+@using Se.Models;
+@using Se.Controllers;
+@{ 
+    string sort_action_name = nameof(PracticeController.ViewModelCollection);
+}
+
+
+<table class="table table-bordered table-condensed">
+<tr>
+    <th class="col-sm-2">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.SemVMList.FirstOrDefault().Naziv)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model.Search) { { "sort", ViewBag.NazivSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.SemVMList.FirstOrDefault().Opis)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.SemVMList.FirstOrDefault().Datum)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model.Search) { { "sort", ViewBag.DatumSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th class="center">
+        @Html.DisplayNameFor(model => model.SemVMList.FirstOrDefault().PopunjenDaNe)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.SemVMList.FirstOrDefault().BrojPredbiljezbi)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(Model.Search) { { "sort", ViewBag.BrojSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th></th>
+</tr>
+
+@foreach (var item in Model.SemVMList)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Opis)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.DatumDisplayString)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+        </td>
+        <td class="center">
+            @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+        </td>
+    </tr>
+}
+</table>

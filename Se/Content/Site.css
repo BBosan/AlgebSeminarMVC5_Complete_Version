@@ -1,0 +1,137 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+#upper_menu{
+    /*padding:5px;*/
+    margin-bottom:1em;
+    /*border-radius:3px;*/
+    /*outline:1px solid #ff4d4d*/
+}
+
+/**************************NOVO*************************************/
+
+/*DROPDOWN COLOR STYLING START*/
+    option:disabled:not(:first-child){ /* Svi osim ----Odaberite---- */
+      color:#ff4d4d;
+    }
+
+    option:not(:disabled){      
+      background: #333;
+      color:#eee;
+    }
+
+    option[selected]:not(:disabled){/*:disabled*/
+        font-style:italic;
+        font-weight:bolder;
+        color:#4d79ff
+    }
+
+    /*option[value="0"]{
+        color:#333;
+        background: transparent;
+    }*/
+
+/*DROPDOWN COLOR STYLING END*/
+
+
+/*ACTIVE LINK*/
+.activeLink{
+    background-image: linear-gradient(#020202, #101112 40%, #141618);
+}
+
+
+/*AVATAR*/
+ /*U _LoginPartial*/
+#parentThumbPreview{
+    padding: 10px 15px;
+}
+
+#parentThumbPreview span{
+    vertical-align:middle;
+}
+
+.thumbPreview{
+    border:2px inset #eee;
+    width:30px;
+    height:30px;
+    object-fit:cover;
+}
+
+.thumbPreviewProfileCard{
+    width:auto; 
+    height:120px; 
+    margin:0 auto;
+}
+
+
+/*Logout*/
+.logoutText{
+    padding-right:1em;
+    padding-left:0.4em;
+}
+
+
+/*bs override*/
+
+#DatumString{
+    padding:0 12px;
+}
+
+/*BS3 bug fix https://stackoverflow.com/questions/20429229/bootstrap-3-navigation-bar-right-margin-is-not-supposed-to-be-15px*/
+/*.navbar-nav.navbar-right:last-child {
+    margin-right: 0;
+}*/
+
+
+.glyphicon-log-out, #remove .glyphicon-remove{
+     color:#ff4d4d;
+}
+
+.glyphicon-log-in, #transfer .glyphicon-share-alt{
+    color:#4d79ff;
+}
+
+/*.navbar-inverse {
+  background-image:none;
+  background-color: #24282c
+}*/
+
+body{
+    color:#EEFBFF;
+}
+
+
+.btn-info{
+    background:#009AFA;
+}
+
+.btn-success{
+    background:#24B382;
+}
+
+.btn-warning{
+    background:#BF8620;
+}
+
+.btn-danger{
+    background:#ff4d4d;
+}
+
+.icon-bar{
+    background:#EEFBFF;
+}

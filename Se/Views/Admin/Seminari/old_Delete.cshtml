@@ -1,0 +1,203 @@
+﻿@model SemVM
+
+@using Se.Models;
+
+@{
+    ViewBag.Title = "Delete";
+
+
+}
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+<hr />
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Naziv)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Naziv)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Datum)
+    </dt>
+
+    <dd>
+        @*@Html.DisplayFor(model => model.Datum)*@
+        @*@Model.Datum.ToString("MM\\/dd\\/yyyy")*@
+        @Html.DisplayFor(model => model.DatumDisplayString)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.PopunjenDaNe)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.PopunjenDaNeText)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.BrojPredbiljezbi)
+        @if (Model.Predbiljezba.Count() > 0)
+        {
+            <button id="transfer" title="Kopiraj Predbiljezbe U Drugi Seminar?" type="button" class="btn btn-link" data-toggle="modal" data-target="#mojModal">
+                <span class="glyphicon glyphicon-transfer"></span>
+            </button>
+        }
+        <span id="idUDisplay"></span>
+        <button title="Cancel?" type="button" class="btn btn-link" id="remove">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </dd>
+</dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="container">
+            <!-- Modal -->
+            <div class="modal fade" id="mojModal" data-keyboard="false" data-backdrop="static" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                            <h4 class="modal-title">Kopiraj Predbiljezbe U Drugi Seminar?</h4>
+                        </div>
+                        <div class="modal-body">
+                            @Html.DropDownList("idU", new PredVM().SeminariDropDown.Where(x=>x.Value != Model.id.ToString()), htmlAttributes: new { @class = "form-control" })
+                            @Html.DropDownList("idUx", ViewBag.ListaSeminara as IEnumerable<SelectListItem>, "-----Odaberite-----", htmlAttributes: new { @class = "form-control" })
+                            <div id="hidden_desc"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="btn-group btn-group-justified">
+                                <a href="#" id="nope" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                                <a href="#" id="yep" class="btn btn-primary" data-dismiss="modal">Ok</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
+
+@section styles{
+    <style>
+        .modal-body{
+            height: 210px; max-height: 100%; 
+        }
+
+        body {
+            overflow-y: scroll;
+            height: 100%;
+        }
+
+        #idU{
+            margin:0 auto;
+            max-width:100%;
+        }
+
+        #remove{
+            display:none;
+            color:#ff4d4d;
+        }
+
+        #remove, #transfer{
+            padding:0;
+        }
+
+        #hidden_desc{
+            color:#4d79ff;
+        }
+
+        #idUDisplay{
+            color:#4d79ff;
+        }
+    </style>    
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            var temp_val = "0";
+            var temp_desc = "";
+
+            $("#remove").on("click", function () {
+                $("#remove").hide();
+                $("#idU").val("0");
+                $("#hidden_desc").html("");
+                $("#idUDisplay").text("");
+                temp_val = "0";
+                temp_desc = "";
+            });
+
+            $("#mojModal").on("click", "#yep", function () {
+                temp_val = $("#idU").val();
+                temp_desc = $("#hidden_desc").html();
+            });
+
+            $('#mojModal').on('hidden.bs.modal', function () {
+                var selected_text = $("#idU option:selected").not("#idU option:disabled").text();
+                console.log(selected_text);
+
+                if ($("#idUx option:selected").val()) {
+                    var selected_text2 = $("#idUx option:selected").text();
+                    console.log(selected_text2);
+                }
+
+                //var selected_val = $("#idU").val(); //bit ce null za ---Pls Select---
+                if (selected_text != "") {
+                    $("#idUDisplay").text(selected_text);
+                    $("#remove").show();
+                }
+            });
+
+            $("#mojModal").on("click", "#nope", function () {
+                if (temp_val == null) {
+                    $("#idU").val("0");
+                    $("#remove").hide();
+                    $("#idUDisplay").text("");
+                    $("#hidden_desc").html("");
+                }
+                else {
+                    $("#idU").val(temp_val);
+                    $("#hidden_desc").html(temp_desc);
+                }
+            });
+
+            $("#idU").on("change", function () {
+                var selected_val = $(this).val();
+                if (selected_val != "") {
+                    @*$.ajax({
+                        url: '@Url.Action("GetPredbiljezbeOfSelectedSeminar")' + '?id=' + selected_val,
+                        type: "GET",
+                        success: function (result) {
+                            $("#hidden_desc").html("<h1>"+result+"</h1>");
+                        }
+                    });*@
+
+                    $("#hidden_desc").load('@Url.Action("SelectedSeminarInfo")', { 'id': selected_val });
+                }
+
+            });
+
+        });
+    </script>
+}

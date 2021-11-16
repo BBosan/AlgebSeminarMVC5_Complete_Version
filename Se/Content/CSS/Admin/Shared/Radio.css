@@ -1,0 +1,24 @@
+﻿    #radio_container{
+         padding-left:0;
+    }
+
+    #radio_container label{
+         margin:0;
+    }
+
+    #radio_container label:not(:last-child){
+         padding-right: 0.8em
+    }
+
+    /*za standardni label*/
+    /*input[type="radio"]:checked+label {
+      color: dodgerblue;
+      font-style: normal;
+    }*/
+
+    /*https://stackoverflow.com/questions/4641752/css-how-to-style-a-selected-radio-buttons-label*/
+    /*za input unutar labela*/
+    input[type="radio"]:checked + span { /*ili    bez + span vec sa  ~ *      */
+      color: #4d79ff;
+      font-style: normal;
+    }    

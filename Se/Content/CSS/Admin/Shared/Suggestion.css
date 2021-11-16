@@ -1,0 +1,67 @@
+﻿#searchResult{
+display: inline-block;
+list-style: none;
+margin: 0;
+padding: 0;
+}
+
+#searchResult li{
+display: inline-block;
+background: #eee;
+color: #333;
+font-style:oblique;
+margin-right: 0.1em;
+}
+
+
+#searchResult li:not(.controls):hover {
+cursor: pointer;
+background: #4d79ff;
+color: #eee;
+}
+
+#searchResult .controls:hover {
+cursor: copy;
+background: #ff4d4d;
+color: #fff;
+}
+
+
+/*ako koristim button ovo ispod Treba*/
+#searchResult .controls:first-child:hover {
+border-bottom-left-radius: 13px;
+border-top-left-radius: 13px;
+}
+
+#searchResult .controls:last-child:hover {
+border-bottom-right-radius: 13px;
+border-top-right-radius: 13px;
+}
+
+/*#searchResult span{
+    margin:0;
+    padding:0;
+    line-height:0;
+}*/
+
+/*ako koristim button ovo ispod ne treba*/
+/*#searchResult li:first-child {
+border-bottom-left-radius: 3px;
+border-top-left-radius: 3px;
+}
+
+#searchResult li:last-child {
+border-bottom-right-radius: 3px;
+border-top-right-radius: 3px;
+}
+
+
+#searchResult .controls:first-child:hover {
+border-bottom-left-radius: 10px;
+border-top-left-radius: 10px;
+}
+
+#searchResult .controls:last-child:hover {
+border-bottom-right-radius: 10px;
+border-top-right-radius: 10px;
+}*/

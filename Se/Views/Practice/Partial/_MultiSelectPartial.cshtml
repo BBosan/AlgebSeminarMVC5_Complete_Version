@@ -1,0 +1,54 @@
+﻿@model List<Se.Models.SemVM>
+
+<span class="glyphicon glyphicon-remove" id="za_brisat_submit" role="button" aria-hidden="true"></span>
+
+<ol id="selectable">
+    @foreach (var item in Model)
+    {
+        <li class="ui-widget-content" value="@item.id" data-val="@item.Naziv">@item.Naziv</li>
+    }
+</ol>
+
+<script>
+    $(function () {
+        //Select
+        var res = [];
+        $("#selectable").selectable({
+            start: function () {
+            },
+            stop: function () {
+                res = [];
+                var result = $("#select-result").empty();
+                $(".ui-selected", this).each(function () {
+                    var index = $("#selectable li").index(this);
+                    var naziv = $(this).data("val");
+                    var id = $(this).val();
+                    res.push(id);
+                    result.append(" #" + (index + 1) + ":" + naziv + ",&nbsp;");
+                });
+
+                var dat = result.text();
+                dat = dat.substr(0, dat.lastIndexOf(','));
+                result.text(dat);
+
+                if (res.length < 1)
+                    $("#za_brisat_submit").fadeTo("fast", 0).css({ display: "none", pointerEvents: "none", cursor: "default" });
+                else if (res.length >= 1)
+                    $("#za_brisat_submit").fadeTo("fast", 1).css({ display: "inline", pointerEvents: "auto", cursor: "pointer" })
+            }
+        });
+
+        //Post
+        var url = '@Url.Action("MultiSelect", "Practice")';
+        $("#za_brisat_submit").on("click", function (e) {
+            e.preventDefault();
+            $.post(url, { res: res }, function (data) {
+                res = [];
+                $("#select-result").text("none");
+                $("#Ajax").html(data);
+            });
+        });
+
+
+    });
+</script>

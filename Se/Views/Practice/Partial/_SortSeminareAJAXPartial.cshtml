@@ -1,0 +1,77 @@
+﻿@model IEnumerable<SemVM>
+@using Se.Models;
+@using Se.Controllers;
+
+@{ 
+    //string sort_action_name = nameof(PracticeController.SortSeminareAJAX);
+    //var search = ViewData["sm"] as SearchModel;
+    //var nazivRouteValues = new { sort = ViewBag.NazivSort, Naziv = search.Naziv, Broj = search.Broj, Status = search.Status };
+    string sort_action_name = nameof(PracticeController.ModelSearch);
+    SearchModel search = ViewBag.searchModel ?? new { };
+    var generalRouteValues = new { Naziv = search.Naziv, Broj = search.Broj, Status = search.Status, Opis = search.Opis };
+}
+
+<table class="table table-bordered table-condensed">
+<tr>
+    <th class="col-sm-2">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.Naziv)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(/*generalRouteValues*/search) { {"sort", ViewBag.NazivSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th>
+        @Html.DisplayNameFor(model => model.Opis)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.Datum)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name,
+       new RouteValueDictionary(generalRouteValues) { { "sort", ViewBag.DatumSort } },
+       ViewOpcije.ajaxOptions,
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th class="center">
+        @Html.DisplayNameFor(model => model.PopunjenDaNe)
+    </th>
+    <th class="center">
+        <span style="display: inline-block;">
+            @Html.DisplayNameFor(model => model.BrojPredbiljezbi)
+        </span>
+        @Ajax.ActionLink(" ", sort_action_name, 
+       new RouteValueDictionary(generalRouteValues) { { "sort", ViewBag.BrojSort } }, 
+       ViewOpcije.ajaxOptions, 
+       ViewOpcije.glyphiconSort)
+    </th>
+    <th></th>
+</tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Naziv)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Opis)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.DatumDisplayString)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+        </td>
+        <td class="center">
+            @Html.DisplayFor(modelItem => item.BrojPredbiljezbi)
+        </td>
+        <td class="center">
+            @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+        </td>
+    </tr>
+}
+</table>

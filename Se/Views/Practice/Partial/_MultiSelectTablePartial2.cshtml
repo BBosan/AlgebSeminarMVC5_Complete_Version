@@ -1,0 +1,173 @@
+﻿@model IEnumerable<Se.Models.SemVM>
+
+
+@if (Model.Any())
+{
+    <div id="other_table_container" class="table-responsive">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            @**@
+            <tr class="hidden_row">
+                <th class="test">
+                    <div class="container_for_button">
+                        <button type="button" id="za_brisat_submit2" title="DELETE!" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                </th>
+                <th colspan="4">
+                    <span id="naslov">Popis Seminara</span>
+                </th>
+                <th class="test">
+                    <div class="container_for_button">
+                        <button type="button" id="clear2" class="btn btn-success btn-sm" title="CANCEL!">
+                            <span class="glyphicon glyphicon-ban-circle"></span>
+                        </button>
+                    </div>
+                </th>
+            </tr>
+            @**@
+
+            <tr>
+                <th class="test">
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PopunjenDaNe)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Naziv)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Opis)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Datum)
+                </th>
+                <th class="test">
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="selectable">
+            @foreach (var item in Model)
+            {
+                <tr class="ui-widget-content" id="@item.id" data-val="@item.Naziv">
+                    <td class="test">
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Naziv)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Opis)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DatumDisplayString)
+                    </td>
+                    <td class="test">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+
+}
+else
+{
+    <h4>Nema Rezultata!</h4>
+}
+
+<script>
+    $(function () {
+        //Select
+        $("#selectable").selectable({
+            filter: ">tr",
+            stop: function (event, ui) {
+                var samoAkoNisuVecPrikazani = $('#za_brisat_submit2').css('opacity') == '0';
+
+                if ($('.ui-selected').length < 1) {
+                    hideMenu();
+                    console.log("hide buttons");
+                }
+                else if (samoAkoNisuVecPrikazani) {
+                    showMenu();
+                    console.log("show buttons");
+                }
+
+                var text = $(".ui-selected").map(function (i) {
+                    var index = i + 1;
+                    var output =
+                        "<span style='color:red'>#" + index + "</span>"
+                        + ": " + $(this).data("val")
+                        + "<span style='color:green'> (ID:" + this.id + ")</span>";
+                    return output;
+                }).get().join(', ');
+
+                $("#select-result").html(text);
+            }
+        });
+
+        //Post
+        var url = '@Url.Action("MultiSelect", "Practice")';
+        $("#za_brisat_submit2").on("click", function (e) {
+            e.preventDefault();
+            var ids = $('.ui-selected').map(function () {
+                return this.id
+            }).get();
+            hideMenu();
+            setTimeout(function () {
+                $.post(url, { res: ids }, function (data) {
+                    $("#select-result").text("none");
+                    $("#Ajax").html(data);
+                });
+            }, 900);
+        });
+
+        //Clear
+        $("#clear2").on("click", function () {
+            $("#selectable>tr").removeClass("ui-selected");
+            hideMenu();
+        });
+
+
+    });
+
+
+    function showMenu() {
+        $(".hidden_row .test").animate({
+            height: "50px"
+        }/*, 500*/);//.promise().done(function () {
+        $(".test").animate({
+            width: "10%"
+        }/*, 700*/);
+        $("#za_brisat_submit2, #clear2").animate({
+            opacity: 1,
+        }, "slow").promise().done(function () {
+            $(".hidden_row #naslov").animate({ 'opacity': 0 }, "fast", function () {
+                $(this).text('Brisanje Seminara');
+            }).animate({ 'opacity': 1 }, "fast");
+        });;
+        //});
+    }
+
+    function hideMenu() {
+        $("#select-result").text("none");
+        $(".hidden_row .test").animate({
+            height: "30px"
+        }).promise().done(function () {
+            $(".hidden_row #naslov").animate({ 'opacity': 0 }, "fast", function () {
+                $(this).text('Popis Seminara');
+            }).animate({ 'opacity': 1 }, "fast");
+            $(".test").animate({
+                width: "0",
+            }, "slow");
+            $("#za_brisat_submit2, #clear2").animate({
+                opacity: 0,
+            }, "slow");
+        });
+    }
+
+</script>

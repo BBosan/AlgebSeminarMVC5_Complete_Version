@@ -1,0 +1,9 @@
+﻿@model List<Se.Pages>
+@using Se.Other
+
+@foreach (var item in Model)
+{
+    <li data-block-id="id_@item.id">
+        @Html.ActionLink(item.LinkText, item.ActionName, item.ControllerName, routeValues: null, htmlAttributes: new { @class = Html.IsActive(item.ControllerName) })
+    </li>
+}

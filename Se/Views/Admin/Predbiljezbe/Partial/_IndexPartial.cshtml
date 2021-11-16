@@ -1,0 +1,250 @@
+﻿@model IEnumerable<PredVM>
+
+@using X.PagedList.Mvc;
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+@using Se.Models;
+@using Se.Controllers;
+
+@{
+    string action_name = nameof(PredbiljezbeController.Index);
+    var sq = ViewData["SearchQ"];
+    string sort = "sort";
+    var onePageOfPredbiljezbas = Model;
+    Layout = null;
+}
+
+<script>
+    //https://jsfiddle.net/BF9Gx/
+    //https://forum.jquery.com/topic/jquery-selectable-as-table-not-returning-id
+    //https://stackoverflow.com/questions/6635659/jquery-bind-click-anything-but-element
+    $(document).ready(function () {
+        //https://stackoverflow.com/questions/3314810/jquery-trigger-event-when-click-outside-the-element/22623341
+        $("#selectable, #za_brisat_submit").click(function (e) {
+            e.stopPropagation();
+        });
+
+        $("#za_brisat_submit_button").click(function () {
+            $("#za_brisat_submit").slideUp("fast", function () { });
+        });
+
+        $(document)./*add("#za_brisat_submit_button").*/click(function () {
+            $("#selectable > tr").removeClass("ui-selected");
+            $("#selectable tr > td").removeClass("highlight");
+            //$("#selectable>tr").removeClass("ui-selected highlight"); //za cijeli tr
+            $("#za_brisat_submit").slideUp("fast", function () { });
+        });
+
+        //$("#selectable").bind("mousedown", function (e) {
+        //    e.metaKey = true; //emulates CTRL hold + click
+        //}).selectable();
+
+        $("#selectable").on("selectablestart", function (event, ui) {
+            event.originalEvent.ctrlKey = true;
+        });
+
+        //Selectable
+        $("#selectable").selectable({
+            filter: ">tr",
+            cancel: 'a', //https://stackoverflow.com/questions/1555836/jquery-ui-selectable-links-not-being-followed-on-click
+            //delay: 150,
+            //classes: {
+            //    "ui-selected" : "highlight" //za cijeli tr
+            //},
+            selected: function () {
+                $(".ui-selected td").not(".skip_me").addClass("highlight");
+            },
+            unselecting: function (event, ui) {
+                $(".ui-unselecting td").removeClass("highlight");
+            },
+            stop: function (event, ui) {
+                var samoAkoNisuVecPrikazani = $('#za_brisat_submit').css('display') == 'none';
+
+                if ($('.ui-selected').length < 1) {
+                    $("#za_brisat_submit").slideUp("normal", function () {});
+                }
+                else if (samoAkoNisuVecPrikazani) {
+                    $("#za_brisat_submit").slideDown("normal", function () {});
+                }
+            }
+        });
+
+        //Post
+        var url = '@Url.Action("SelectableDelete", "Predbiljezbe")';
+        $("#za_brisat_submit_button").on("click", function (e) {
+            e.preventDefault();
+
+            var ids = $('.ui-selected').map(function () {
+                return this.id
+            }).get();
+
+            $.post(url, { res: ids }, function (data_array) {
+                //$("#Ajax").html(data_array); //prije modal
+                //dodao sa Modal start
+                //$(".ui-selected").remove();
+                //https://forums.asp.net/t/2003627.aspx?Load+partial+view+view+in+a+modal nastavit metit u modal popup
+                $("#modalResult").html(data_array);
+                //dodao sa Modal end
+            });
+
+            $("#mojModal").modal({
+                //backdrop: "static",
+                //keyboard: false
+            });
+
+            $.post('@Url.Action("Index", "Predbiljezbe")', $("#myform").serialize());
+        });
+
+
+        //https://stackoverflow.com/questions/17461682/calling-a-function-on-bootstrap-modal-open/17461707
+        //$("#mojModal").on("show.bs.modal", function (e) {
+
+        //});
+
+        //$("#mojModal").on("shown.bs.modal", function (e) {
+        //});
+
+        $("#mojModal").on("hidden.bs.modal", function (e) {
+            $("#modalResult").empty();
+        });
+
+    });
+</script>  
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>
+                        <span style="display: inline-block;">
+                            @Html.DisplayNameFor(model => model.Ime)
+                        </span>
+                        @Ajax.ActionLink(" ", action_name,
+                       new RouteValueDictionary(sq) { { sort, ViewBag.ImeSort } },
+                       ViewOpcije.ajaxOptions,
+                       ViewOpcije.glyphiconSort)
+                    </th>
+                    <th>
+                        <span style="display: inline-block;">
+                            @Html.DisplayNameFor(model => model.Prezime)
+                        </span>
+                        @Ajax.ActionLink(" ", action_name,
+                       new RouteValueDictionary(sq) { { sort, ViewBag.PrezImeSort } },
+                       ViewOpcije.ajaxOptions,
+                       ViewOpcije.glyphiconSort)
+                    </th>
+                    <th class="col-sm-2">
+                        <span style="display: inline-block;">
+                            @Html.DisplayNameFor(model => model.idSeminar)
+                        </span>
+                        @Ajax.ActionLink(" ", action_name,
+                       new RouteValueDictionary(sq) { { sort, ViewBag.NazivSort } },
+                       ViewOpcije.ajaxOptions,
+                       ViewOpcije.glyphiconSort)
+                    </th>
+                    <th >
+                        <span style="display: inline-block;">
+                            @Html.DisplayNameFor(model => model.Datum)
+                        </span>
+                        @Ajax.ActionLink(" ", action_name,
+                       new RouteValueDictionary(sq) { { sort, ViewBag.DatumSort } },
+                       ViewOpcije.ajaxOptions,
+                       ViewOpcije.glyphiconSort)
+                    </th>
+                    <th class="col-sm-3">
+                        <span style="display: inline-block;">
+                            @Html.DisplayNameFor(model => model.Adresa)
+                        </span>
+                        @Ajax.ActionLink(" ", action_name,
+                       new RouteValueDictionary(sq) { { sort, ViewBag.AdresaSort } },
+                       ViewOpcije.ajaxOptions,
+                       ViewOpcije.glyphiconSort)
+                    </th>
+                    <th >
+                        @Html.DisplayNameFor(model => model.Email)
+                    @*</th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BrojTelefona)
+                    </th>*@
+                    <th >
+                        @Html.DisplayNameFor(model => model.StatusDaNe)
+                    </th>
+                    <th class="col-sm-2"></th>
+                </tr>
+            </thead>
+            <tbody id="selectable">
+                @foreach (var item in onePageOfPredbiljezbas)
+                {
+                    <tr class="ui-widget-content" id="@item.idPredbiljezbe" data-val="@(item.Ime+" "+item.Prezime)">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prezime)
+                        </td>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.Seminar.Naziv)
+                        </td>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.DatumDisplayString)
+                        </td>
+                        <td >
+                            @Html.DisplayFor(modelItem => item.Adresa)
+                        </td>
+                        <td class="skip_me">
+                            <a href="mailto:@(item.Email)?Subject=Hello%20@(item.Ime)" target="_top">@@</a>
+                        </td>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.BrojTelefona)
+                        </td>*@
+                        <td  title="@item.StatusDaNeText" style='color: @(item.StatusDaNe == false ? "#ff4d4d": item.StatusDaNe.HasValue ? "#5cb85c" : "")'>
+                            @if (item.StatusDaNe == false)
+                            {
+                                <span class="glyphicon glyphicon-remove"></span>
+                            }
+                            else if (item.StatusDaNe == true)
+                            {
+                                <span class="glyphicon glyphicon-ok"></span>
+                            }
+                            else
+                            {
+                                <span style="font-weight:bolder;pointer-events:none">?</span>
+                            }
+                            @Html.DisplayFor(modelItem => item.StatusDaNeText)
+                        </td>
+                        <td class="skip_me">
+
+                            <div class="mojaGRP btn-group btn-group-sm">
+                                <a href="@Url.Action("Edit", "Predbiljezbe", new { id = item.idPredbiljezbe })" class="mojbtn btn btn-success">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                                <a href="@Url.Action("Details", "Predbiljezbe", new { id = item.idPredbiljezbe })" class="mojbtn btn btn-info">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            </div>
+
+                            @*@Html.ActionLink("Edit", "Edit", new { id = item.idPredbiljezbe }) |*@
+                            @*@Html.ActionLink("Details", "Details", new { id = item.idPredbiljezbe })*@
+                            @*@Html.ActionLink("Delete", "Delete", new { id = item.idPredbiljezbe })*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @Html.PagedListPager((IPagedList)onePageOfPredbiljezbas, page => Url.Action(action_name,
+    new RouteValueDictionary(sq) { { "page", page }, { sort, ViewBag.CurrentSort } }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+        ViewOpcije.pagedListRenderOpcije,
+        ViewOpcije.ajaxOptions))
+}
+else
+{
+    <h2>NEMA REZULTATA!</h2>
+}
+
+

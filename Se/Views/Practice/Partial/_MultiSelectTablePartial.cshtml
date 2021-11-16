@@ -1,0 +1,181 @@
+﻿@model IEnumerable<Se.Models.SemVM>
+
+@*<span class="glyphicon glyphicon-remove" id="za_brisat_submit" role="button" aria-hidden="true"></span>*@
+
+<style>
+    /*.hidden_table_row{
+        position:absolute;
+        color:red;
+        bottom:0;
+        right:0;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }*/
+</style>
+
+@if (Model.Any())
+{
+<table class="table table-bordered table-condensed" id="selectable" >
+    <thead>
+
+        @**@
+        <tr>
+            <th class="hideIt">
+                <button type="button" id="za_brisat_submit" title="DELETE!" class="btn btn-danger btn-sm">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </th>
+            <th colspan="4" height="30px" style="text-align:center;">
+                <h4>Popis Seminara</h4>
+            </th>
+            <th  class="hideIt">
+                <button type="button" class="btn btn-success btn-sm" id="clear"  title="CANCEL!">
+                    <span class="glyphicon glyphicon-ban-circle"></span>
+                </button>
+            </th>
+        </tr>
+        @**@
+
+        <tr>
+            <th class="hideIt">
+                @*<span class="hidden_table_row">Br.Upisa</span>*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PopunjenDaNe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Naziv)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datum)
+            </th>
+            <th  class="hideIt">
+                @*<span class="hidden_table_row">ID</span>*@
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr class="ui-widget-content" id="@item.id" data-val="@item.Naziv"> 
+            <td class="hideIt">
+                @*<span class="hidden_table_row">@item.BrojPredbiljezbi</span>*@
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PopunjenDaNeText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naziv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatumDisplayString)
+            </td>
+            <td  class="hideIt">
+                @*<span class="hidden_table_row">@item.id</span>*@
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+}
+else
+{
+    <h4>Nema Rezultata!</h4>
+}
+
+<script>
+    //https://jsfiddle.net/BF9Gx/
+    //https://forum.jquery.com/topic/jquery-selectable-as-table-not-returning-id
+    $(function () {
+        //Select
+        $("#selectable").selectable({
+            filter: "tbody>tr",
+            //selected: function (event, ui) {
+            //    //var id = ui.selected.id;
+            //    //console.log(id);
+            //},
+            selected: function () {
+               $("th h4").text("Brisanje Seminara");
+            },
+            selecting: function () {
+                //$("body").css("overflow-y", "hidden");
+            },
+            stop: function (event, ui) {
+                var text = $(".ui-selected").map(function (i) {
+                    var index = i + 1;
+                    var output =
+                        "<span style='color:red'>#" + index + "</span>"
+                        + ": " + $(this).data("val")
+                        + "<span style='color:green'> (ID:" + this.id + ")</span>";
+                    return output;
+                }).get().join(', ');
+
+                $("#select-result").html(text);
+
+                //var ids = $('.ui-selected').map(function () {
+                //    return this.id
+                //}).get();
+
+                //console.log(ids);
+
+                //if ($('.ui-selected').length === 0) { 
+                //    $("th h4").text("Popis Seminara");
+                //}
+
+                var samoAkoNisuVecPrikazani = $('#za_brisat_submit, .hideIt').css('display') == 'none';
+
+                if ($('.ui-selected').length < 1) {
+                    $("#za_brisat_submit, #clear")/*.fadeTo("fast", 0)*/.css({ /*display: "none",*/ pointerEvents: "none", cursor: "default" });
+                    $(".hideIt").hide("slow", function () {
+                        $(this).css("width", 0);
+                    });
+
+                    console.log("hide buttons");
+                    $("th h4").text("Popis Seminara");
+                    $("#select-result").text("none");
+                }
+                else if (samoAkoNisuVecPrikazani) {
+                    $("#za_brisat_submit, #clear")/*.fadeTo("fast", 1)*/.css({ /*display: "inline",*/ pointerEvents: "auto", cursor: "pointer" })
+                    $(".hideIt").css("display", "table-cell").animate({ "width": "10%"});
+
+                    console.log("show buttons");
+                }
+            }
+        });
+
+        //Post
+        var url = '@Url.Action("MultiSelect", "Practice")';
+        $("#za_brisat_submit").on("click", function (e) {
+            e.preventDefault();
+            var ids = $('.ui-selected').map(function () {
+                return this.id
+            }).get();
+
+            $.post(url, { res: ids }, function (data) {
+                $("#select-result").text("none");
+                $("#Ajax").html(data);
+            });
+        });
+
+        //Clear
+        $("#clear").on("click", function () {
+            $("#selectable tbody>tr").removeClass("ui-selected");
+            $("#select-result").text("none");
+            $("th h4").text("Popis Seminara");
+            $("#za_brisat_submit, #clear").css({ /*display: "none",*/ pointerEvents: "none", cursor: "default" /*, opacity: 0 */ });
+            $(".hideIt").hide("fast", function () {
+                $(this).css("width", 0);
+            });
+        });
+
+
+    });
+</script>

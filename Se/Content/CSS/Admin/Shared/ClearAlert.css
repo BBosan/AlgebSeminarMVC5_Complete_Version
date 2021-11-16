@@ -1,0 +1,26 @@
+﻿    #clear_alert{
+        display:none;
+        position:fixed;
+        padding:0;
+        margin:0;
+        right:0;
+        left:0;
+        bottom:0;
+        z-index:999;
+        height:70px;
+        width:100%;
+        overflow:hidden;
+        white-space:nowrap;
+        /*background:#222;*/
+        text-align:center;
+    }
+    #clear_alert .close{
+        margin-top:0.2em;
+        margin-right:0.3em;
+        color:#eee
+    }
+    #clear_alert strong{
+        line-height:2.2;
+        font-size:30px;
+        color:#ff4d4d
+    }
